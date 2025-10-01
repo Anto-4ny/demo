@@ -14,51 +14,43 @@
     <p class="text-center text-sm">Discover, List & Explore Beautiful Places</p>
   </header>
 
-  <!-- Categories -->
-  <main class="p-6 max-w-5xl mx-auto">
-    <h2 class="text-2xl font-semibold mb-6 text-gray-800">Choose a Category</h2>
-    
-    <div class="grid md:grid-cols-2 gap-6">
+  <!-- Landing Categories -->
+  <main id="landing" class="p-6 max-w-6xl mx-auto">
+    <h2 class="text-2xl font-semibold mb-6 text-gray-800 text-center">Choose a Category</h2>
+    <div class="grid md:grid-cols-2 gap-8">
       <!-- Entertainment -->
-      <div class="bg-white rounded-2xl shadow p-5">
-        <h3 class="text-xl font-bold text-orange-600 mb-3">🎭 Entertainment</h3>
-        <ul class="space-y-2">
-          <li><button class="subcategory text-blue-600 hover:underline" data-category="Entertainment" data-sub="Cinema & Theaters">Cinema & Theaters</button></li>
-          <li><button class="subcategory text-blue-600 hover:underline" data-category="Entertainment" data-sub="Music & Live Performances">Music & Live Performances</button></li>
-          <li><button class="subcategory text-blue-600 hover:underline" data-category="Entertainment" data-sub="Nightlife">Nightlife</button></li>
-          <li><button class="subcategory text-blue-600 hover:underline" data-category="Entertainment" data-sub="Gaming & Indoor Fun">Gaming & Indoor Fun</button></li>
-          <li><button class="subcategory text-blue-600 hover:underline" data-category="Entertainment" data-sub="Amusement & Recreation">Amusement & Recreation</button></li>
-          <li><button class="subcategory text-blue-600 hover:underline" data-category="Entertainment" data-sub="Sports & Outdoor Activities">Sports & Outdoor Activities</button></li>
-        </ul>
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1603190287605-e6adefa4a18e?w=800" class="w-full h-48 object-cover">
+        <div class="p-5">
+          <h3 class="text-xl font-bold text-orange-600 mb-2">🎭 Entertainment</h3>
+          <p class="text-gray-600 mb-4">Explore cinemas, theaters, nightlife, sports, and all fun activities in Kenya.</p>
+          <button onclick="openCategory('Entertainment')" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">View Listings</button>
+        </div>
       </div>
 
-      <!-- Culture & Historical Sites -->
-      <div class="bg-white rounded-2xl shadow p-5">
-        <h3 class="text-xl font-bold text-orange-600 mb-3">🏛 Culture & Historical Sites</h3>
-        <ul class="space-y-2">
-          <li><button class="subcategory text-blue-600 hover:underline" data-category="Culture" data-sub="Museums">Museums</button></li>
-          <li><button class="subcategory text-blue-600 hover:underline" data-category="Culture" data-sub="Art Galleries">Art Galleries</button></li>
-          <li><button class="subcategory text-blue-600 hover:underline" data-category="Culture" data-sub="Historic Landmarks">Historic Landmarks</button></li>
-          <li><button class="subcategory text-blue-600 hover:underline" data-category="Culture" data-sub="Monuments">Monuments</button></li>
-          <li><button class="subcategory text-blue-600 hover:underline" data-category="Culture" data-sub="Archaeological Sites">Archaeological Sites</button></li>
-          <li><button class="subcategory text-blue-600 hover:underline" data-category="Culture" data-sub="Cultural Sites">Cultural Sites</button></li>
-          <li><button class="subcategory text-blue-600 hover:underline" data-category="Culture" data-sub="Heritage Sites">Heritage Sites</button></li>
-          <li><button class="subcategory text-blue-600 hover:underline" data-category="Culture" data-sub="Religious Places of Interest">Religious Places of Interest</button></li>
-        </ul>
+      <!-- Culture -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1524492449090-1a065f4d5d7d?w=800" class="w-full h-48 object-cover">
+        <div class="p-5">
+          <h3 class="text-xl font-bold text-orange-600 mb-2">🏛 Culture & Historical Sites</h3>
+          <p class="text-gray-600 mb-4">Discover Kenya’s rich history, museums, monuments, heritage, and cultural sites.</p>
+          <button onclick="openCategory('Culture')" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">View Listings</button>
+        </div>
       </div>
     </div>
-
-    <!-- Listings Section -->
-    <section class="mt-10">
-      <h2 class="text-2xl font-semibold text-gray-800 mb-4">📌 Submitted Listings</h2>
-      <div id="listings" class="grid md:grid-cols-2 gap-6"></div>
-    </section>
   </main>
 
-  <!-- Form Section -->
+  <!-- Category View -->
+  <section id="categoryView" class="hidden p-6 max-w-6xl mx-auto">
+    <button onclick="backHome()" class="mb-4 bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">&larr; Back</button>
+    <h2 id="categoryTitle" class="text-3xl font-bold text-orange-600 mb-6"></h2>
+    <div id="subcategories" class="space-y-8"></div>
+  </section>
+
+  <!-- Form Modal -->
   <section id="form-section" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
     <div class="bg-white w-full max-w-lg rounded-xl shadow-lg p-6 relative">
-      <button id="closeForm" class="absolute top-2 right-3 text-gray-500 hover:text-red-500 text-lg">&times;</button>
+      <button onclick="closeForm()" class="absolute top-2 right-3 text-gray-500 hover:text-red-500 text-lg">&times;</button>
       <h2 id="formTitle" class="text-2xl font-bold mb-4 text-orange-600"></h2>
       
       <form id="listingForm" class="space-y-4">
@@ -89,65 +81,104 @@
   </section>
 
   <script>
-    const subcategoryButtons = document.querySelectorAll(".subcategory");
-    const formSection = document.getElementById("form-section");
-    const formTitle = document.getElementById("formTitle");
-    const closeForm = document.getElementById("closeForm");
-    const extraFields = document.getElementById("extraFields");
-    const listingForm = document.getElementById("listingForm");
-    const listingsDiv = document.getElementById("listings");
-
-    const formCategory = document.getElementById("formCategory");
-    const formSubcategory = document.getElementById("formSubcategory");
+    const categories = {
+      "Entertainment": [
+        "Cinema & Theaters",
+        "Music & Live Performances",
+        "Nightlife",
+        "Gaming & Indoor Fun",
+        "Amusement & Recreation",
+        "Sports & Outdoor Activities"
+      ],
+      "Culture": [
+        "Museums",
+        "Art Galleries",
+        "Historic Landmarks",
+        "Monuments",
+        "Archaeological Sites",
+        "Cultural Sites",
+        "Heritage Sites",
+        "Religious Places of Interest"
+      ]
+    };
 
     let listings = []; // store submitted items
 
-    subcategoryButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        formTitle.innerText = `${btn.dataset.sub} - ${btn.dataset.category}`;
-        formCategory.value = btn.dataset.category;
-        formSubcategory.value = btn.dataset.sub;
-        formSection.classList.remove("hidden");
+    function openCategory(category) {
+      document.getElementById("landing").classList.add("hidden");
+      document.getElementById("categoryView").classList.remove("hidden");
+      document.getElementById("categoryTitle").innerText = category;
 
-        // Reset extra fields
-        extraFields.innerHTML = "";
+      const subDiv = document.getElementById("subcategories");
+      subDiv.innerHTML = "";
 
-        // Example: different fields for Entertainment vs Culture
-        if (btn.dataset.category === "Entertainment") {
-          extraFields.innerHTML = `
-            <div>
-              <label class="block text-sm font-medium">Opening Hours</label>
-              <input id="extra1" type="text" class="w-full p-2 border rounded-lg">
-            </div>
-            <div>
-              <label class="block text-sm font-medium">Ticket Price (if any)</label>
-              <input id="extra2" type="text" class="w-full p-2 border rounded-lg">
-            </div>`;
-        } else {
-          extraFields.innerHTML = `
-            <div>
-              <label class="block text-sm font-medium">Year Established</label>
-              <input id="extra1" type="number" class="w-full p-2 border rounded-lg">
-            </div>
-            <div>
-              <label class="block text-sm font-medium">Cultural/Historical Significance</label>
-              <textarea id="extra2" class="w-full p-2 border rounded-lg" rows="2"></textarea>
-            </div>`;
-        }
+      categories[category].forEach(sub => {
+        const section = document.createElement("div");
+        section.className = "bg-white p-5 rounded-xl shadow";
+
+        section.innerHTML = `
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-xl font-bold text-gray-800">${sub}</h3>
+            <button onclick="openForm('${category}','${sub}')" class="bg-orange-600 text-white px-3 py-1 rounded hover:bg-orange-700">+ Add Listing</button>
+          </div>
+          <div id="list-${category}-${sub}" class="space-y-3"></div>
+        `;
+        subDiv.appendChild(section);
+
+        renderListings(category, sub);
       });
-    });
+    }
 
-    closeForm.addEventListener("click", () => {
-      formSection.classList.add("hidden");
-      listingForm.reset();
-    });
+    function backHome() {
+      document.getElementById("categoryView").classList.add("hidden");
+      document.getElementById("landing").classList.remove("hidden");
+    }
 
-    listingForm.addEventListener("submit", (e) => {
+    function openForm(category, sub) {
+      document.getElementById("form-section").classList.remove("hidden");
+      document.getElementById("formTitle").innerText = `Add to ${sub} (${category})`;
+      document.getElementById("formCategory").value = category;
+      document.getElementById("formSubcategory").value = sub;
+
+      const extraFields = document.getElementById("extraFields");
+      extraFields.innerHTML = "";
+
+      if (category === "Entertainment") {
+        extraFields.innerHTML = `
+          <div>
+            <label class="block text-sm font-medium">Opening Hours</label>
+            <input id="extra1" type="text" class="w-full p-2 border rounded-lg">
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Ticket Price</label>
+            <input id="extra2" type="text" class="w-full p-2 border rounded-lg">
+          </div>`;
+      } else {
+        extraFields.innerHTML = `
+          <div>
+            <label class="block text-sm font-medium">Year Established</label>
+            <input id="extra1" type="number" class="w-full p-2 border rounded-lg">
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Cultural/Historical Significance</label>
+            <textarea id="extra2" class="w-full p-2 border rounded-lg" rows="2"></textarea>
+          </div>`;
+      }
+    }
+
+    function closeForm() {
+      document.getElementById("form-section").classList.add("hidden");
+      document.getElementById("listingForm").reset();
+    }
+
+    document.getElementById("listingForm").addEventListener("submit", (e) => {
       e.preventDefault();
+      const category = document.getElementById("formCategory").value;
+      const sub = document.getElementById("formSubcategory").value;
 
       const newListing = {
-        category: formCategory.value,
-        subcategory: formSubcategory.value,
+        category,
+        sub,
         name: document.getElementById("name").value,
         location: document.getElementById("location").value,
         contact: document.getElementById("contact").value,
@@ -157,28 +188,33 @@
       };
 
       listings.push(newListing);
-      displayListings();
+      renderListings(category, sub);
 
-      formSection.classList.add("hidden");
-      listingForm.reset();
+      closeForm();
     });
 
-    function displayListings() {
-      listingsDiv.innerHTML = "";
-      listings.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "bg-white rounded-xl shadow p-4 border-l-4 border-orange-600";
-        card.innerHTML = `
-          <h3 class="text-lg font-bold text-gray-800">${item.name}</h3>
-          <p class="text-sm text-gray-500"><strong>Category:</strong> ${item.category} → ${item.subcategory}</p>
-          <p><strong>Location:</strong> ${item.location}</p>
-          <p><strong>Contact:</strong> ${item.contact}</p>
-          <p class="text-gray-700 mt-2">${item.description}</p>
-          ${item.extra1 ? `<p><strong>Extra 1:</strong> ${item.extra1}</p>` : ""}
-          ${item.extra2 ? `<p><strong>Extra 2:</strong> ${item.extra2}</p>` : ""}
-        `;
-        listingsDiv.appendChild(card);
-      });
+    function renderListings(category, sub) {
+      const container = document.getElementById(`list-${category}-${sub}`);
+      if (!container) return;
+      container.innerHTML = "";
+
+      const filtered = listings.filter(l => l.category === category && l.sub === sub);
+      if (filtered.length === 0) {
+        container.innerHTML = `<p class="text-gray-400 text-sm">No listings yet. Be the first to add!</p>`;
+      } else {
+        filtered.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "p-4 bg-gray-50 border rounded-lg shadow-sm";
+          card.innerHTML = `
+            <h4 class="font-bold text-gray-800">${item.name}</h4>
+            <p class="text-sm text-gray-500">${item.location} • ${item.contact}</p>
+            <p class="mt-1 text-gray-700">${item.description}</p>
+            ${item.extra1 ? `<p><strong>Extra:</strong> ${item.extra1}</p>` : ""}
+            ${item.extra2 ? `<p><strong>Extra:</strong> ${item.extra2}</p>` : ""}
+          `;
+          container.appendChild(card);
+        });
+      }
     }
   </script>
 </body>

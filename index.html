@@ -47,6 +47,12 @@
         </ul>
       </div>
     </div>
+
+    <!-- Listings Section -->
+    <section class="mt-10">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">📌 Submitted Listings</h2>
+      <div id="listings" class="grid md:grid-cols-2 gap-6"></div>
+    </section>
   </main>
 
   <!-- Form Section -->
@@ -56,21 +62,24 @@
       <h2 id="formTitle" class="text-2xl font-bold mb-4 text-orange-600"></h2>
       
       <form id="listingForm" class="space-y-4">
+        <input type="hidden" id="formCategory">
+        <input type="hidden" id="formSubcategory">
+
         <div>
           <label class="block text-sm font-medium">Name of Place</label>
-          <input type="text" class="w-full p-2 border rounded-lg" required>
+          <input id="name" type="text" class="w-full p-2 border rounded-lg" required>
         </div>
         <div>
           <label class="block text-sm font-medium">Location</label>
-          <input type="text" class="w-full p-2 border rounded-lg" required>
+          <input id="location" type="text" class="w-full p-2 border rounded-lg" required>
         </div>
         <div>
           <label class="block text-sm font-medium">Contact Details</label>
-          <input type="text" class="w-full p-2 border rounded-lg" required>
+          <input id="contact" type="text" class="w-full p-2 border rounded-lg" required>
         </div>
         <div>
           <label class="block text-sm font-medium">Description</label>
-          <textarea class="w-full p-2 border rounded-lg" rows="3"></textarea>
+          <textarea id="description" class="w-full p-2 border rounded-lg" rows="3"></textarea>
         </div>
         <div id="extraFields"></div>
         
@@ -85,10 +94,19 @@
     const formTitle = document.getElementById("formTitle");
     const closeForm = document.getElementById("closeForm");
     const extraFields = document.getElementById("extraFields");
+    const listingForm = document.getElementById("listingForm");
+    const listingsDiv = document.getElementById("listings");
+
+    const formCategory = document.getElementById("formCategory");
+    const formSubcategory = document.getElementById("formSubcategory");
+
+    let listings = []; // store submitted items
 
     subcategoryButtons.forEach(btn => {
       btn.addEventListener("click", () => {
         formTitle.innerText = `${btn.dataset.sub} - ${btn.dataset.category}`;
+        formCategory.value = btn.dataset.category;
+        formSubcategory.value = btn.dataset.sub;
         formSection.classList.remove("hidden");
 
         // Reset extra fields
@@ -99,21 +117,21 @@
           extraFields.innerHTML = `
             <div>
               <label class="block text-sm font-medium">Opening Hours</label>
-              <input type="text" class="w-full p-2 border rounded-lg">
+              <input id="extra1" type="text" class="w-full p-2 border rounded-lg">
             </div>
             <div>
               <label class="block text-sm font-medium">Ticket Price (if any)</label>
-              <input type="text" class="w-full p-2 border rounded-lg">
+              <input id="extra2" type="text" class="w-full p-2 border rounded-lg">
             </div>`;
         } else {
           extraFields.innerHTML = `
             <div>
               <label class="block text-sm font-medium">Year Established</label>
-              <input type="number" class="w-full p-2 border rounded-lg">
+              <input id="extra1" type="number" class="w-full p-2 border rounded-lg">
             </div>
             <div>
               <label class="block text-sm font-medium">Cultural/Historical Significance</label>
-              <textarea class="w-full p-2 border rounded-lg" rows="2"></textarea>
+              <textarea id="extra2" class="w-full p-2 border rounded-lg" rows="2"></textarea>
             </div>`;
         }
       });
@@ -121,7 +139,47 @@
 
     closeForm.addEventListener("click", () => {
       formSection.classList.add("hidden");
+      listingForm.reset();
     });
+
+    listingForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const newListing = {
+        category: formCategory.value,
+        subcategory: formSubcategory.value,
+        name: document.getElementById("name").value,
+        location: document.getElementById("location").value,
+        contact: document.getElementById("contact").value,
+        description: document.getElementById("description").value,
+        extra1: document.getElementById("extra1")?.value || "",
+        extra2: document.getElementById("extra2")?.value || ""
+      };
+
+      listings.push(newListing);
+      displayListings();
+
+      formSection.classList.add("hidden");
+      listingForm.reset();
+    });
+
+    function displayListings() {
+      listingsDiv.innerHTML = "";
+      listings.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "bg-white rounded-xl shadow p-4 border-l-4 border-orange-600";
+        card.innerHTML = `
+          <h3 class="text-lg font-bold text-gray-800">${item.name}</h3>
+          <p class="text-sm text-gray-500"><strong>Category:</strong> ${item.category} → ${item.subcategory}</p>
+          <p><strong>Location:</strong> ${item.location}</p>
+          <p><strong>Contact:</strong> ${item.contact}</p>
+          <p class="text-gray-700 mt-2">${item.description}</p>
+          ${item.extra1 ? `<p><strong>Extra 1:</strong> ${item.extra1}</p>` : ""}
+          ${item.extra2 ? `<p><strong>Extra 2:</strong> ${item.extra2}</p>` : ""}
+        `;
+        listingsDiv.appendChild(card);
+      });
+    }
   </script>
 </body>
 </html>

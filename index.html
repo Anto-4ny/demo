@@ -120,6 +120,55 @@
       ]
     };
 
+    // --- PRE-POPULATED DEMO LISTINGS ---
+    listings.Entertainment["Cinema & Theaters"] = [
+      {
+        name: "IMAX Nairobi",
+        location: "20th Century Plaza, Nairobi",
+        contact: "+254 700 123456",
+        description: "Experience the latest blockbusters with premium sound and visuals.",
+        extra1: "10:00 AM - 11:00 PM",
+        extra2: "KES 800",
+        image: "demo1.jpg"
+      }
+    ];
+
+    listings.Entertainment["Nightlife"] = [
+      {
+        name: "Kiza Lounge",
+        location: "Westlands, Nairobi",
+        contact: "+254 722 987654",
+        description: "Trendy rooftop lounge with Afro-fusion music and signature cocktails.",
+        extra1: "5:00 PM - 4:00 AM",
+        extra2: "Average Drink Price: KES 500",
+        image: "demo2.jpg"
+      }
+    ];
+
+    listings.Culture["Museums"] = [
+      {
+        name: "National Museum of Kenya",
+        location: "Museum Hill, Nairobi",
+        contact: "+254 20 3742131",
+        description: "Showcases Kenya's rich heritage including art, culture, and natural history.",
+        extra1: "1920",
+        extra2: "Preserves Kenyan history & culture",
+        image: "demo3.jpg"
+      }
+    ];
+
+    listings.Culture["Historic Landmarks"] = [
+      {
+        name: "Fort Jesus",
+        location: "Mombasa",
+        contact: "+254 733 456789",
+        description: "16th-century Portuguese fort recognized as a UNESCO World Heritage Site.",
+        extra1: "1593",
+        extra2: "Important defense site in East Africa",
+        image: "demo4.jpg"
+      }
+    ];
+
     function openCategory(category) {
       currentCategory = category;
       categoriesSection.classList.add("hidden");
@@ -142,6 +191,7 @@
         `;
 
         subcategoryList.appendChild(container);
+        displayListings(category, sub); // Show pre-populated listings
       });
     }
 
@@ -156,7 +206,6 @@
       formCategory.value = category;
       formSubcategory.value = sub;
 
-      // Reset form
       listingForm.reset();
       extraFields.innerHTML = "";
 
@@ -193,7 +242,8 @@
         contact: document.getElementById("contact").value,
         description: document.getElementById("description").value,
         extra1: document.getElementById("extra1")?.value || "",
-        extra2: document.getElementById("extra2")?.value || ""
+        extra2: document.getElementById("extra2")?.value || "",
+        image: "placeholder.jpg" // default for new items
       };
 
       listings[formCategory.value][formSubcategory.value].push(newListing);
@@ -208,14 +258,17 @@
       listDiv.innerHTML = "";
       listings[category][sub].forEach(item => {
         const card = document.createElement("div");
-        card.className = "bg-gray-50 p-4 rounded-lg border";
+        card.className = "bg-gray-50 p-4 rounded-lg border flex gap-4 items-start";
         card.innerHTML = `
-          <h4 class="font-bold text-gray-800">${item.name}</h4>
-          <p class="text-sm text-gray-500"><strong>Location:</strong> ${item.location}</p>
-          <p><strong>Contact:</strong> ${item.contact}</p>
-          <p>${item.description}</p>
-          ${item.extra1 ? `<p><strong>Extra 1:</strong> ${item.extra1}</p>` : ""}
-          ${item.extra2 ? `<p><strong>Extra 2:</strong> ${item.extra2}</p>` : ""}
+          <img src="${item.image}" class="w-32 h-24 object-cover rounded-lg">
+          <div>
+            <h4 class="font-bold text-gray-800">${item.name}</h4>
+            <p class="text-sm text-gray-500"><strong>Location:</strong> ${item.location}</p>
+            <p><strong>Contact:</strong> ${item.contact}</p>
+            <p>${item.description}</p>
+            ${item.extra1 ? `<p><strong>Extra 1:</strong> ${item.extra1}</p>` : ""}
+            ${item.extra2 ? `<p><strong>Extra 2:</strong> ${item.extra2}</p>` : ""}
+          </div>
         `;
         listDiv.appendChild(card);
       });
@@ -223,4 +276,3 @@
   </script>
 </body>
 </html>
-

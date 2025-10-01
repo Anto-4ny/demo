@@ -3,54 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ResortCities Demo</title>
+  <title>Kenya Attractions</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
 
   <!-- Header -->
   <header class="bg-orange-600 text-white py-6 shadow-md">
-    <h1 class="text-center text-3xl font-bold">ResortCities Directory</h1>
+    <h1 class="text-center text-3xl font-bold">Kenya Attractions Directory</h1>
     <p class="text-center text-sm">Discover, List & Explore Beautiful Places</p>
   </header>
 
-  <!-- Landing Categories -->
-  <main id="landing" class="p-6 max-w-6xl mx-auto">
+  <!-- MAIN CATEGORIES -->
+  <main id="categories-section" class="p-6 max-w-6xl mx-auto">
     <h2 class="text-2xl font-semibold mb-6 text-gray-800 text-center">Choose a Category</h2>
     <div class="grid md:grid-cols-2 gap-8">
-      <!-- Entertainment -->
+      
+      <!-- Entertainment Card -->
       <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1603190287605-e6adefa4a18e?w=800" class="w-full h-48 object-cover">
-        <div class="p-5">
-          <h3 class="text-xl font-bold text-orange-600 mb-2"> Entertainment</h3>
-          <p class="text-gray-600 mb-4">Explore cinemas, theaters, nightlife, sports, and all fun activities in Kenya.</p>
-          <button onclick="openCategory('Entertainment')" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">View Listings</button>
+        <img src="https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?w=800" class="h-48 w-full object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-bold text-orange-600">🎭 Entertainment</h3>
+          <p class="text-gray-600 mt-2">Explore cinemas, nightlife, concerts, gaming, and fun activities across Kenya.</p>
+          <button onclick="openCategory('Entertainment')" class="mt-4 bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">Explore</button>
         </div>
       </div>
 
-      <!-- Culture -->
+      <!-- Culture Card -->
       <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1524492449090-1a065f4d5d7d?w=800" class="w-full h-48 object-cover">
-        <div class="p-5">
-          <h3 class="text-xl font-bold text-orange-600 mb-2"> Culture & Historical Sites</h3>
-          <p class="text-gray-600 mb-4">Discover Kenya’s rich history, museums, monuments, heritage, and cultural sites.</p>
-          <button onclick="openCategory('Culture')" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">View Listings</button>
+        <img src="https://images.unsplash.com/photo-1581320548520-6e6ee1d82c5f?w=800" class="h-48 w-full object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-bold text-orange-600">🏛 Culture & Historical Sites</h3>
+          <p class="text-gray-600 mt-2">Discover museums, landmarks, archaeological sites, and heritage attractions.</p>
+          <button onclick="openCategory('Culture')" class="mt-4 bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">Explore</button>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- Category View -->
-  <section id="categoryView" class="hidden p-6 max-w-6xl mx-auto">
-    <button onclick="backHome()" class="mb-4 bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">&larr; Back</button>
-    <h2 id="categoryTitle" class="text-3xl font-bold text-orange-600 mb-6"></h2>
-    <div id="subcategories" class="space-y-8"></div>
+  <!-- CATEGORY PAGE -->
+  <section id="category-page" class="hidden p-6 max-w-6xl mx-auto">
+    <button onclick="backToCategories()" class="mb-6 bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400">⬅ Back</button>
+    <h2 id="categoryTitle" class="text-3xl font-bold text-orange-600 mb-4"></h2>
+    <div id="subcategoryList" class="space-y-6"></div>
   </section>
 
-  <!-- Form Modal -->
+  <!-- FORM MODAL -->
   <section id="form-section" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
     <div class="bg-white w-full max-w-lg rounded-xl shadow-lg p-6 relative">
-      <button onclick="closeForm()" class="absolute top-2 right-3 text-gray-500 hover:text-red-500 text-lg">&times;</button>
+      <button id="closeForm" class="absolute top-2 right-3 text-gray-500 hover:text-red-500 text-lg">&times;</button>
       <h2 id="formTitle" class="text-2xl font-bold mb-4 text-orange-600"></h2>
       
       <form id="listingForm" class="space-y-4">
@@ -81,16 +82,33 @@
   </section>
 
   <script>
+    const categoryPage = document.getElementById("category-page");
+    const categoriesSection = document.getElementById("categories-section");
+    const categoryTitle = document.getElementById("categoryTitle");
+    const subcategoryList = document.getElementById("subcategoryList");
+
+    const formSection = document.getElementById("form-section");
+    const formTitle = document.getElementById("formTitle");
+    const closeForm = document.getElementById("closeForm");
+    const extraFields = document.getElementById("extraFields");
+    const listingForm = document.getElementById("listingForm");
+
+    const formCategory = document.getElementById("formCategory");
+    const formSubcategory = document.getElementById("formSubcategory");
+
+    let currentCategory = "";
+    let listings = { Entertainment: {}, Culture: {} };
+
     const categories = {
-      "Entertainment": [
+      Entertainment: [
         "Cinema & Theaters",
         "Music & Live Performances",
         "Nightlife",
         "Gaming & Indoor Fun",
         "Amusement & Recreation",
-        "Sports & Outdoor Activities"
+        "Sports & Outdoor Activities",
       ],
-      "Culture": [
+      Culture: [
         "Museums",
         "Art Galleries",
         "Historic Landmarks",
@@ -98,49 +116,48 @@
         "Archaeological Sites",
         "Cultural Sites",
         "Heritage Sites",
-        "Religious Places of Interest"
+        "Religious Places of Interest",
       ]
     };
 
-    let listings = []; // store submitted items
-
     function openCategory(category) {
-      document.getElementById("landing").classList.add("hidden");
-      document.getElementById("categoryView").classList.remove("hidden");
-      document.getElementById("categoryTitle").innerText = category;
+      currentCategory = category;
+      categoriesSection.classList.add("hidden");
+      categoryPage.classList.remove("hidden");
+      categoryTitle.textContent = category;
 
-      const subDiv = document.getElementById("subcategories");
-      subDiv.innerHTML = "";
-
+      subcategoryList.innerHTML = "";
       categories[category].forEach(sub => {
-        const section = document.createElement("div");
-        section.className = "bg-white p-5 rounded-xl shadow";
+        if (!listings[category][sub]) listings[category][sub] = [];
 
-        section.innerHTML = `
-          <div class="flex justify-between items-center mb-3">
-            <h3 class="text-xl font-bold text-gray-800">${sub}</h3>
-            <button onclick="openForm('${category}','${sub}')" class="bg-orange-600 text-white px-3 py-1 rounded hover:bg-orange-700">+ Add Listing</button>
+        const container = document.createElement("div");
+        container.className = "bg-white rounded-xl shadow p-6";
+
+        container.innerHTML = `
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-semibold text-gray-800">${sub}</h3>
+            <button onclick="openForm('${category}','${sub}')" class="bg-orange-600 text-white px-3 py-1 rounded-lg hover:bg-orange-700">+ List New Item</button>
           </div>
           <div id="list-${category}-${sub}" class="space-y-3"></div>
         `;
-        subDiv.appendChild(section);
 
-        renderListings(category, sub);
+        subcategoryList.appendChild(container);
       });
     }
 
-    function backHome() {
-      document.getElementById("categoryView").classList.add("hidden");
-      document.getElementById("landing").classList.remove("hidden");
+    function backToCategories() {
+      categoryPage.classList.add("hidden");
+      categoriesSection.classList.remove("hidden");
     }
 
     function openForm(category, sub) {
-      document.getElementById("form-section").classList.remove("hidden");
-      document.getElementById("formTitle").innerText = `Add to ${sub} (${category})`;
-      document.getElementById("formCategory").value = category;
-      document.getElementById("formSubcategory").value = sub;
+      formSection.classList.remove("hidden");
+      formTitle.innerText = `${sub} - ${category}`;
+      formCategory.value = category;
+      formSubcategory.value = sub;
 
-      const extraFields = document.getElementById("extraFields");
+      // Reset form
+      listingForm.reset();
       extraFields.innerHTML = "";
 
       if (category === "Entertainment") {
@@ -160,25 +177,17 @@
             <input id="extra1" type="number" class="w-full p-2 border rounded-lg">
           </div>
           <div>
-            <label class="block text-sm font-medium">Cultural/Historical Significance</label>
+            <label class="block text-sm font-medium">Historical/Cultural Significance</label>
             <textarea id="extra2" class="w-full p-2 border rounded-lg" rows="2"></textarea>
           </div>`;
       }
     }
 
-    function closeForm() {
-      document.getElementById("form-section").classList.add("hidden");
-      document.getElementById("listingForm").reset();
-    }
+    closeForm.addEventListener("click", () => formSection.classList.add("hidden"));
 
-    document.getElementById("listingForm").addEventListener("submit", (e) => {
+    listingForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const category = document.getElementById("formCategory").value;
-      const sub = document.getElementById("formSubcategory").value;
-
       const newListing = {
-        category,
-        sub,
         name: document.getElementById("name").value,
         location: document.getElementById("location").value,
         contact: document.getElementById("contact").value,
@@ -187,35 +196,31 @@
         extra2: document.getElementById("extra2")?.value || ""
       };
 
-      listings.push(newListing);
-      renderListings(category, sub);
+      listings[formCategory.value][formSubcategory.value].push(newListing);
+      displayListings(formCategory.value, formSubcategory.value);
 
-      closeForm();
+      formSection.classList.add("hidden");
+      listingForm.reset();
     });
 
-    function renderListings(category, sub) {
-      const container = document.getElementById(`list-${category}-${sub}`);
-      if (!container) return;
-      container.innerHTML = "";
-
-      const filtered = listings.filter(l => l.category === category && l.sub === sub);
-      if (filtered.length === 0) {
-        container.innerHTML = `<p class="text-gray-400 text-sm">No listings yet. Be the first to add!</p>`;
-      } else {
-        filtered.forEach(item => {
-          const card = document.createElement("div");
-          card.className = "p-4 bg-gray-50 border rounded-lg shadow-sm";
-          card.innerHTML = `
-            <h4 class="font-bold text-gray-800">${item.name}</h4>
-            <p class="text-sm text-gray-500">${item.location} • ${item.contact}</p>
-            <p class="mt-1 text-gray-700">${item.description}</p>
-            ${item.extra1 ? `<p><strong>Extra:</strong> ${item.extra1}</p>` : ""}
-            ${item.extra2 ? `<p><strong>Extra:</strong> ${item.extra2}</p>` : ""}
-          `;
-          container.appendChild(card);
-        });
-      }
+    function displayListings(category, sub) {
+      const listDiv = document.getElementById(`list-${category}-${sub}`);
+      listDiv.innerHTML = "";
+      listings[category][sub].forEach(item => {
+        const card = document.createElement("div");
+        card.className = "bg-gray-50 p-4 rounded-lg border";
+        card.innerHTML = `
+          <h4 class="font-bold text-gray-800">${item.name}</h4>
+          <p class="text-sm text-gray-500"><strong>Location:</strong> ${item.location}</p>
+          <p><strong>Contact:</strong> ${item.contact}</p>
+          <p>${item.description}</p>
+          ${item.extra1 ? `<p><strong>Extra 1:</strong> ${item.extra1}</p>` : ""}
+          ${item.extra2 ? `<p><strong>Extra 2:</strong> ${item.extra2}</p>` : ""}
+        `;
+        listDiv.appendChild(card);
+      });
     }
   </script>
 </body>
 </html>
+
